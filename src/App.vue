@@ -34,6 +34,7 @@ import { useAuthStore } from "./store/auth";
 const authStore = useAuthStore();
 const user = computed(() => authStore.user);
 
+// 退出登录
 const handleLogout = () => {
   authStore.logout();
 };
