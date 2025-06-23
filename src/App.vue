@@ -7,7 +7,7 @@
           <el-dropdown>
             <span class="el-dropdown-link">
               <el-avatar icon="el-icon-user-solid" />
-              {{ user?.username || "管理员" }}
+              <span class="name">{{ user?.username || "管理员" }}</span>
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <template #dropdown>
@@ -40,7 +40,7 @@ const handleLogout = () => {
 };
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -71,5 +71,13 @@ const handleLogout = () => {
   display: flex;
   align-items: center;
   color: white;
+}
+
+.el-main {
+  padding: 0;
+}
+
+.name{
+  margin-left: 6px;
 }
 </style>

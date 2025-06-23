@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import { mockData } from '../api/mockData'
-import router from '../router'
+import { mockData } from '@/api/mockData'
+import router from '@/router'
 
 interface User {
 	id: number

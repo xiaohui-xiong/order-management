@@ -9,12 +9,10 @@
 
       <div v-if="order">
         <el-descriptions :column="2" border>
-          <el-descriptions-item label="订单ID">{{
-            order.id
-          }}</el-descriptions-item>
+          <el-descriptions-item label="订单ID">{{ order.id }}</el-descriptions-item>
           <el-descriptions-item label="订单状态">
             <el-tag :type="statusTagType(order.status)" effect="plain">
-              {{ statusMap[order.status] }}
+              {{ getOrderStatusText(order.status) }}
             </el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="用户姓名">{{
@@ -40,9 +38,7 @@
         <el-table :data="order.items" border class="items-table">
           <el-table-column prop="name" label="商品名称" />
           <el-table-column label="单价">
-            <template #default="{ row }">
-              ¥{{ row.price.toFixed(2) }}
-            </template>
+            <template #default="{ row }"> ¥{{ row.price.toFixed(2) }} </template>
           </el-table-column>
           <el-table-column prop="quantity" label="数量" />
           <el-table-column label="小计">
@@ -61,30 +57,14 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { orders } from "../api/mockData";
-import type { Order, OrderStatus } from "../api/mockData";
+import { mockData } from "@/api/mockData";
+import type { Order } from "@/type/order.types";
+import { getOrderStatusText, statusTagType } from "@/enums/order-status.enum";
 
 const route = useRoute();
 const router = useRouter();
 
-// 状态映射
-const statusMap: Record<OrderStatus, string> = {
-  pending: "待付款",
-  shipped: "已发货",
-  completed: "已完成",
-  cancelled: "已取消",
-};
-
-// 订单的状态
-const statusTagType = (status: OrderStatus): string => {
-  const types: Record<OrderStatus, string> = {
-    pending: "warning",
-    shipped: "primary",
-    completed: "success",
-    cancelled: "danger",
-  };
-  return types[status];
-};
+const id = route.params.id;
 
 // 格式化日期
 const formatDate = (dateString: string) => {
@@ -94,9 +74,11 @@ const formatDate = (dateString: string) => {
 
 const order = ref<Order | null>(null);
 
-onMounted(() => {
-  const id = route.params.id as string;
-  order.value = orders.find((o) => o.id === id) || null;
+onMounted(async () => {
+  const data = await mockData.getOrders();
+  if (data.iRet === 0) {
+    order.value = data.data.find((o) => o.id === id) || null;
+  }
 });
 
 const goBack = () => {

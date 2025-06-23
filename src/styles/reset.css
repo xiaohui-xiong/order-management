@@ -1,0 +1,49 @@
+/* 重置所有元素的边距和内边距 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 重置列表样式 */
+ol, ul {
+  list-style: none;
+}
+
+/* 重置链接样式 */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 重置标题字体大小 */
+h1, h2, h3, h4, h5, h6 {
+  font-size: 100%;
+  font-weight: normal;
+}
+
+/* 重置表单元素 */
+button, input, select, textarea {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+
+/* 重置表格 */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* 重置图片和嵌入内容 */
+img, embed, object, video {
+  max-width: 100%;
+  height: auto;
+  border: 0;
+}
+
+/* 重置 HTML5 元素 */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
