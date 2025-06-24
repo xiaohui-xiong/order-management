@@ -2,15 +2,7 @@ import type { Order } from './../type/order.types'
 import { md5 } from '@/utils/crypto'
 import generateOrders from '../../mock/index'
 import type { User } from '@/type/user.types'
-
-interface ApiResponse {
-	ret: number
-	iRet: number
-	sMsg: string
-	sAmsSerial: string
-	fReqUseTime: number
-	data?: any // 实际业务数据
-}
+import type { ApiResponse } from '@/type/api.types'
 
 //接口固定格式
 const format: ApiResponse = {

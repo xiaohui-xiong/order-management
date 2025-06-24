@@ -7,11 +7,7 @@
         <h2>订单列表</h2>
       </template>
 
-      <OrderTable
-        :loading="loading"
-        :orderData="orderData"
-        @view-detail="viewOrderDetail"
-      />
+      <OrderTable :loading="loading" :orderData="orderData" @view-detail="viewOrderDetail" />
     </el-card>
   </div>
 </template>
@@ -28,6 +24,7 @@ const loading = ref(false);
 
 const orderData = ref<Order[]>([]);
 
+// 携带订单ID跳转订单详情
 const viewOrderDetail = (orderId: string) => {
   router.push({ name: "OrderDetail", params: { id: orderId } });
 };
@@ -38,6 +35,7 @@ onMounted(async () => {
     orderData.value = data.data;
     loading.value = false;
   } else {
+    loading.value = true;
   }
 });
 

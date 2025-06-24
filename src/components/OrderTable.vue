@@ -75,7 +75,7 @@
 import { computed, reactive, ref, watch, watchEffect } from "vue";
 import type { Order } from "@/type/order.types";
 import { getOrderStatusText, OrderStatus, statusTagType } from "@/enums/order-status.enum";
-import { throttle } from "@/utils";
+import { throttle, formatDate } from "@/utils";
 import { ElMessage } from "element-plus";
 import Pagination from "@/components/Pagination.vue";
 
@@ -85,6 +85,8 @@ const props = defineProps({
   orderData: Array<Order>
 });
 const orderData = ref<any>([])
+
+// 监听实时获取数据
 watchEffect(() => {
   orderData.value = props.orderData
   // 执行初始化逻辑
@@ -92,6 +94,7 @@ watchEffect(() => {
 // 定义事件
 defineEmits(["view-detail"]);
 
+// select数据
 const statusOptions = [
   { value: "PENDING_PAYMENT", label: "待付款" },
   { value: "SHIPPED", label: "已发货" },
@@ -104,7 +107,7 @@ const searchForm = reactive({
   id: "",
   phone: "",
   status: "" as OrderStatus | "",
-  date: [] as any,
+  date: '',
 });
 
 // 分页设置
@@ -118,16 +121,6 @@ const sortOptions = reactive({
   prop: "",
   order: "" as "" | "ascending" | "descending",
 });
-
-// 格式化日期
-const formatDate = (dateString: string) => {
-  if (dateString) {
-    return new Date(dateString).toLocaleString();
-  } else {
-    return ''
-  }
-
-};
 
 // 处理搜索
 const handleSearch = throttle(
@@ -146,7 +139,7 @@ const handleReset = () => {
   searchForm.id = "";
   searchForm.phone = "";
   searchForm.status = "";
-  searchForm.date = [];
+  searchForm.date = '';
   pagination.currentPage = 1;
   orderData.value = [...props.orderData]
 };

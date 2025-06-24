@@ -18,6 +18,7 @@ export interface Order {
 	}>
 }
 
+// 商品接口
 export interface OrderItem {
 	name: string
 	price: number

@@ -24,11 +24,9 @@
           <el-descriptions-item label="下单时间">{{
             formatDate(order.orderTime)
           }}</el-descriptions-item>
-          <el-descriptions-item label="订单金额"
-            >¥{{ order.amount.toFixed(2) }}</el-descriptions-item
-          >
+          <el-descriptions-item label="订单金额">¥{{ order.amount.toFixed(2) }}</el-descriptions-item>
           <el-descriptions-item label="预计送达时间">
-            {{ formatDate(order.deliveryTime || "") || "未设置" }}
+            {{ formatDate(order.deliveryTime || "") || "无" }}
           </el-descriptions-item>
         </el-descriptions>
 
@@ -59,6 +57,7 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { mockData } from "@/api/mockData";
 import type { Order } from "@/type/order.types";
+import { formatDate } from "@/utils";
 import { getOrderStatusText, statusTagType } from "@/enums/order-status.enum";
 
 const route = useRoute();
@@ -66,14 +65,9 @@ const router = useRouter();
 
 const id = route.params.id;
 
-// 格式化日期
-const formatDate = (dateString: string) => {
-  if (!dateString) return "";
-  return new Date(dateString).toLocaleString();
-};
-
 const order = ref<Order | null>(null);
 
+// 初始获取订单列表查询订单详情
 onMounted(async () => {
   const data = await mockData.getOrders();
   if (data.iRet === 0) {
@@ -81,6 +75,7 @@ onMounted(async () => {
   }
 });
 
+// 跳转回订单列表
 const goBack = () => {
   router.push("/orders");
 };

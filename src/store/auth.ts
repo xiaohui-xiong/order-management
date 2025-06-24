@@ -16,7 +16,6 @@ export const useAuthStore = defineStore('auth', {
 	getters: {
 		isAuthenticated: (state) => !!state.token,
 	},
-
 	actions: {
 		login(username: string, password: string) {
 			// 模拟登录逻辑

@@ -2,32 +2,17 @@
   <div class="login-container">
     <el-card class="login-card">
       <h2 class="login-title">登录系统</h2>
-      <el-form
-        :model="loginForm"
-        :rules="loginRules"
-        ref="loginFormRef"
-        label-width="80px"
-      >
+      <el-form :model="loginForm" :rules="loginRules" ref="loginFormRef" label-width="80px">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="loginForm.username" placeholder="请输入用户名" />
         </el-form-item>
 
         <el-form-item label="密码" prop="password">
-          <el-input
-            v-model="loginForm.password"
-            type="password"
-            placeholder="请输入密码"
-            show-password
-          />
+          <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" show-password />
         </el-form-item>
       </el-form>
       <div>
-        <el-button
-          class="login-button"
-          type="primary"
-          @click="handleLogin"
-          :loading="loading"
-        >
+        <el-button class="login-button" type="primary" @click="handleLogin" :loading="loading">
           登录
         </el-button>
       </div>
@@ -79,12 +64,13 @@ const handleLogin = () => {
         .then(() => {
           ElMessage.success("登录成功");
           router.push("/orders");
-          loading.value = false;
         })
         .catch((error) => {
           ElMessage.error(error.message);
+        })
+        .finally(() => {
           loading.value = false;
-        });
+        })
     }
   });
 };
@@ -111,6 +97,7 @@ const handleLogin = () => {
   margin-bottom: 30px;
   color: #409eff;
 }
+
 .login-button {
   margin: 0 auto;
   display: block;
