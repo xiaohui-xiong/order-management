@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <el-container>
+    <el-container style="height: 100vh;">
       <el-header v-if="$route.name !== 'Login'" class="app-header">
         <div class="logo">订单管理系统</div>
         <div class="user-info">
@@ -12,9 +12,7 @@
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item @click="handleLogout"
-                  >退出登录</el-dropdown-item
-                >
+                <el-dropdown-item @click="handleLogout">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -77,7 +75,7 @@ const handleLogout = () => {
   padding: 0;
 }
 
-.name{
+.name {
   margin-left: 6px;
 }
 </style>

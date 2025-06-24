@@ -30,7 +30,7 @@
 
     <!-- 订单表格 -->
     <el-table :data="pagedOrders" border v-loading="loading" @sort-change="handleSortChange" style="width: 100%"
-      max-height="450">
+      max-height="53vh">
       <el-table-column prop="id" label="订单ID" sortable="custom" align="center" />
       <el-table-column prop="status" label="订单状态" align="center">
         <template #default="{ row }">
@@ -72,7 +72,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, ref, watchEffect } from "vue";
+import { computed, reactive, ref, watch, watchEffect } from "vue";
 import type { Order } from "@/type/order.types";
 import { getOrderStatusText, OrderStatus, statusTagType } from "@/enums/order-status.enum";
 import { throttle } from "@/utils";
@@ -218,7 +218,7 @@ const handleSortChange = ({ prop, order }: { prop: string; order: string }) => {
 };
 
 // 过滤后的订单数据
-computed(() => {
+watch(sortOptions, () => {
   let result = [...props.orderData];
 
   // 应用排序

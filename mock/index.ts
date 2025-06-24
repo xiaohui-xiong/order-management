@@ -160,7 +160,7 @@ function generateOrderItems() {
 }
 
 // 计算订单总金额
-function calculateTotalAmount(items) {
+function calculateTotalAmount(items: OrderItem[]) {
 	return items.reduce((sum, item) => sum + item.price * item.quantity, 0)
 }
 
@@ -180,7 +180,7 @@ function generateRandomDate() {
 }
 
 // 生成预计送达时间（基于下单时间）
-function generateDeliveryTime(orderTime) {
+function generateDeliveryTime(orderTime: string) {
 	const date = new Date(orderTime)
 	date.setDate(date.getDate() + 2 + Math.floor(Math.random() * 5)) // 2-7天后送达
 	return date.toISOString()
