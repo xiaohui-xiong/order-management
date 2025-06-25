@@ -31,7 +31,7 @@
     <!-- 订单表格 -->
     <el-table :data="pagedOrders" border v-loading="loading" @sort-change="handleSortChange" style="width: 100%"
       max-height="53vh">
-      <el-table-column prop="id" label="订单ID" sortable="custom" align="center" />
+      <el-table-column prop="id" label="订单ID" align="center" />
       <el-table-column prop="status" label="订单状态" align="center">
         <template #default="{ row }">
           <el-tag :type="statusTagType(row.status)" effect="plain">
@@ -75,9 +75,10 @@
 import { computed, reactive, ref, watch, watchEffect } from "vue";
 import type { Order } from "@/type/order.types";
 import { getOrderStatusText, OrderStatus, statusTagType } from "@/enums/order-status.enum";
-import { throttle, formatDate } from "@/utils";
+import { throttle, formatDate, timeToTimestamp } from "@/utils";
 import { ElMessage } from "element-plus";
 import Pagination from "@/components/Pagination.vue";
+import { phoneReg } from '@/utils/regexConstants'
 
 // 定义Props
 const props = defineProps({
@@ -86,6 +87,7 @@ const props = defineProps({
 });
 const orderData = ref<any>([])
 
+const excelData = ref<boolean>(false)
 // 监听实时获取数据
 watchEffect(() => {
   orderData.value = props.orderData
@@ -109,7 +111,6 @@ const searchForm = reactive({
   status: "" as OrderStatus | "",
   date: '',
 });
-
 // 分页设置
 const pagination = reactive({
   currentPage: 1,
@@ -125,7 +126,14 @@ const sortOptions = reactive({
 // 处理搜索
 const handleSearch = throttle(
   function () {
-    orderData.value = searchData(orderData.value)
+    // 正则判断手机格式
+    if (searchForm.phone && !phoneReg.test(searchForm.phone)) {
+      ElMessage.error('请输入正确的手机号')
+      return
+    }
+    pagination.currentPage = 1
+    orderData.value = searchData([...props.orderData]);
+    excelData.value = true;
   },
   {
     leading: true,
@@ -136,6 +144,7 @@ const handleSearch = throttle(
 
 // 处理重置
 const handleReset = () => {
+  excelData.value = false
   searchForm.id = "";
   searchForm.phone = "";
   searchForm.status = "";
@@ -163,8 +172,8 @@ const searchData = (data: Array<Order>) => {
   }
 
   if (searchForm.date && date.length === 2) {
-    const startDate = date[0];
-    const endDate = date[1];
+    const startDate = timeToTimestamp(date[0]) || date[0];
+    const endDate = timeToTimestamp(date[1]) || date[1];
     result = result.filter((order) => {
       const orderDate = new Date(order.orderTime);
       return orderDate >= startDate && orderDate <= endDate;
@@ -176,11 +185,14 @@ const searchData = (data: Array<Order>) => {
 // 处理导出
 const handleExport = () => {
   // 模拟导出功能
-  const filtered = orderData.value;
+  let filtered = orderData.value;
+  if (!excelData.value) {
+    filtered = pagedOrders.value
+  }
   const header = ["订单ID", "状态", "用户名", "手机号", "下单时间", "金额", "送达时间"];
   const csvContent = [
     header.join(","),
-    ...filtered.map((order) =>
+    ...filtered.map((order: Order) =>
       [
         order.id,
         getOrderStatusText(order.status),
@@ -212,7 +224,7 @@ const handleSortChange = ({ prop, order }: { prop: string; order: string }) => {
 
 // 过滤后的订单数据
 watch(sortOptions, () => {
-  let result = [...props.orderData];
+  let result = [...orderData.value];
 
   // 应用排序
   if (sortOptions.prop && sortOptions.order) {
@@ -222,13 +234,11 @@ watch(sortOptions, () => {
     result.sort((a, b) => {
       const aVal = a[prop];
       const bVal = b[prop];
-
       if (typeof aVal === "string" && typeof bVal === "string") {
         return order === "ascending"
-          ? aVal.localeCompare(bVal)
-          : bVal.localeCompare(aVal);
+          ? timeToTimestamp(aVal) - timeToTimestamp(bVal)
+          : timeToTimestamp(bVal) - timeToTimestamp(aVal);
       }
-
       if (typeof aVal === "number" && typeof bVal === "number") {
         return order === "ascending" ? aVal - bVal : bVal - aVal;
       }

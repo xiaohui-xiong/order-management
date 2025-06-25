@@ -106,3 +106,9 @@ export const formatDate = (dateString: string) => {
 		return ''
 	}
 }
+
+// 时间转换为时间戳
+export const timeToTimestamp = (time: string) => {
+	const date = new Date(time)
+	return date.getTime()
+}

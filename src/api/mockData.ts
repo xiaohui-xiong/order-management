@@ -51,7 +51,10 @@ export const mockData = {
 	getOrders: () => {
 		if (orderData.length === 0) {
 			orderData = generateOrders()
-		} else {
+		}
+		if (!orderData.length) {
+			format.iRet = 100001
+			format.sMsg = '获取数据失败'
 		}
 		return {
 			...format,

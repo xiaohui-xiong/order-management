@@ -18,6 +18,7 @@ import { useRouter } from "vue-router";
 import OrderTable from "@/components/OrderTable.vue";
 import type { Order } from "@/type/order.types";
 import { mockData } from "@/api/mockData";
+import { ElMessage } from "element-plus";
 
 const router = useRouter();
 const loading = ref(false);
@@ -30,11 +31,16 @@ const viewOrderDetail = (orderId: string) => {
 };
 
 onMounted(async () => {
-  const data = await mockData.getOrders();
-  if (data.iRet === 0) {
-    orderData.value = data.data;
-    loading.value = false;
-  } else {
+  try {
+    const data = await mockData.getOrders();
+    if (data.iRet === 0) {
+      orderData.value = data.data;
+      loading.value = false;
+    } else {
+      loading.value = true;
+    }
+  } catch (error) {
+    ElMessage.error("获取订单失败");
     loading.value = true;
   }
 });

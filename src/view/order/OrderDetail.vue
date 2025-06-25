@@ -17,13 +17,13 @@
           </el-descriptions-item>
           <el-descriptions-item label="用户姓名">{{
             order.user.name
-          }}</el-descriptions-item>
+            }}</el-descriptions-item>
           <el-descriptions-item label="用户手机">{{
             order.user.phone
-          }}</el-descriptions-item>
+            }}</el-descriptions-item>
           <el-descriptions-item label="下单时间">{{
             formatDate(order.orderTime)
-          }}</el-descriptions-item>
+            }}</el-descriptions-item>
           <el-descriptions-item label="订单金额">¥{{ order.amount.toFixed(2) }}</el-descriptions-item>
           <el-descriptions-item label="预计送达时间">
             {{ formatDate(order.deliveryTime || "") || "无" }}
@@ -59,6 +59,7 @@ import { mockData } from "@/api/mockData";
 import type { Order } from "@/type/order.types";
 import { formatDate } from "@/utils";
 import { getOrderStatusText, statusTagType } from "@/enums/order-status.enum";
+import { ElMessage } from "element-plus";
 
 const route = useRoute();
 const router = useRouter();
@@ -69,10 +70,15 @@ const order = ref<Order | null>(null);
 
 // 初始获取订单列表查询订单详情
 onMounted(async () => {
-  const data = await mockData.getOrders();
-  if (data.iRet === 0) {
-    order.value = data.data.find((o) => o.id === id) || null;
+  try {
+    const data = await mockData.getOrders();
+    if (data.iRet === 0) {
+      order.value = data.data.find((o) => o.id === id) || null;
+    }
+  } catch (error) {
+    ElMessage.error('获取订单失败')
   }
+
 });
 
 // 跳转回订单列表
